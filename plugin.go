@@ -82,12 +82,18 @@ func (p Plugin) Exec() error {
 }
 
 func message(repo Repo, build Build) string {
+	var c string
+	if build.Commit == "" {
+		c = ""
+	} else {
+		c = build.Commit[:8]
+	}
 	return fmt.Sprintf("*%s* <%s|%s/%s#%s> (%s) by %s",
 		build.Status,
 		build.Link,
 		repo.Owner,
 		repo.Name,
-		build.Commit[:8],
+		c,
 		build.Branch,
 		build.Author,
 	)
