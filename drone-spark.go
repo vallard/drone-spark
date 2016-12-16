@@ -30,8 +30,13 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:   "template",
-			Usage:  "spark template",
+			Usage:  "spark template text",
 			EnvVar: "PLUGIN_TEMPLATE",
+		},
+		cli.StringFlag{
+			Name:   "markdown",
+			Usage:  "spark markdown template text",
+			EnvVar: "PLUGIN_MARKDOWN",
 		},
 		cli.StringFlag{
 			Name:   "repo.owner",
@@ -148,6 +153,7 @@ func run(c *cli.Context) error {
 			Room:     c.String("room"),
 			Token:    c.String("token"),
 			Template: c.String("template"),
+			Markdown: c.String("markdown"),
 		},
 	}
 

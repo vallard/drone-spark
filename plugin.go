@@ -31,6 +31,7 @@ type (
 		Room     string
 		Token    string
 		Template string
+		Markdown string
 	}
 
 	Job struct {
@@ -65,16 +66,28 @@ func (p Plugin) Exec() error {
 
 	// create a new message
 	m := spark.Message{
-		RoomId: room.Id,
-		Text:   message(p.Repo, p.Build),
+		RoomId:   room.Id,
+		Markdown: message(p.Repo, p.Build),
 	}
 
+	// template defined trumps default markdown
 	if p.Config.Template != "" {
 		txt, err := RenderTrim(p.Config.Template, p)
 		if err != nil {
 			return err
 		}
+		m.Markdown = ""
 		m.Text = txt
+	}
+
+	// Markdown trumps text
+	if p.Config.Markdown != "" {
+		txt, err := RenderTrim(p.Config.Markdown, p)
+		if err != nil {
+			return err
+		}
+		m.Markdown = txt
+		m.Text = ""
 	}
 
 	_, err = s.CreateMessage(m)
@@ -88,13 +101,28 @@ func message(repo Repo, build Build) string {
 	} else {
 		c = build.Commit[:8]
 	}
-	return fmt.Sprintf("*%s* <%s|%s/%s#%s> (%s) by %s",
-		build.Status,
+	//return fmt.Sprintf("*%s* <%s|%s/%s#%s> (%s) by %s",
+	var m string
+	if build.Status == "success" {
+		m = fmt.Sprintf("##Build for %s/%s is successful\n__Build Author:__ %s\n",
+			repo.Owner,
+			repo.Name,
+			build.Author)
+
+	} else {
+		m = fmt.Sprintf("#Build for %s/%s FAILED!!! \n__Drone blames build author:__ %s\n",
+			repo.Owner,
+			repo.Name,
+			build.Author)
+	}
+
+	return fmt.Sprintf("%s###Build Details\n * [Build Log](%s/%s/%s#%s) \n* __Event__ %s\n",
+		m,
 		build.Link,
 		repo.Owner,
 		repo.Name,
 		c,
-		build.Branch,
-		build.Author,
+		build.Event,
 	)
+
 }
