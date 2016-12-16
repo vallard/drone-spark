@@ -103,25 +103,16 @@ func message(repo Repo, build Build) string {
 	}
 	//return fmt.Sprintf("*%s* <%s|%s/%s#%s> (%s) by %s",
 	var m string
-	if build.Status == "success" {
-		m = fmt.Sprintf("##Build for %s/%s is successful\n__Build Author:__ %s\n",
-			repo.Owner,
-			repo.Name,
-			build.Author)
-
-	} else {
-		m = fmt.Sprintf("#Build for %s/%s FAILED!!! \n__Drone blames build author:__ %s\n",
-			repo.Owner,
-			repo.Name,
-			build.Author)
-	}
-
-	return fmt.Sprintf("%s###Build Details\n * [Build Log](%s/%s/%s#%s) \n* __Event__ %s\n",
-		m,
-		build.Link,
+	m = fmt.Sprint("__%s__: for %s/%s/%s\n___Build Author:___ %s\n",
+		build.Status,
 		repo.Owner,
 		repo.Name,
 		c,
+		build.Author)
+
+	return fmt.Sprintf("%s\n * [Build Log](%s) \n *  __Event__ %s\n",
+		m,
+		build.Link,
 		build.Event,
 	)
 
