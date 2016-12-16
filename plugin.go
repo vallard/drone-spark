@@ -102,15 +102,14 @@ func message(repo Repo, build Build) string {
 		c = build.Commit[:8]
 	}
 	//return fmt.Sprintf("*%s* <%s|%s/%s#%s> (%s) by %s",
-	var m string
-	m = fmt.Sprint("__%s__: for %s/%s/%s\n___Build Author:___ %s\n",
+	m := fmt.Sprintf("__%s__: for %s/%s/%s\n___Build Author:___ %s\n",
 		build.Status,
 		repo.Owner,
 		repo.Name,
 		c,
 		build.Author)
 
-	return fmt.Sprintf("%s\n * [Build Log](%s) \n *  __Event__ %s\n",
+	return fmt.Sprintf("%s * [Build Log](%s) \n *  __Event__ %s\n",
 		m,
 		build.Link,
 		build.Event,
