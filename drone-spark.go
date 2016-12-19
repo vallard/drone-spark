@@ -13,8 +13,8 @@ var build = "0" // build number set at compile-time
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "slack plugin"
-	app.Usage = "slack plugin"
+	app.Name = "spark plugin"
+	app.Usage = "spark plugin"
 	app.Action = run
 	app.Version = fmt.Sprintf("1.0.%s", build)
 	app.Flags = []cli.Flag{
